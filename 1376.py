@@ -1,22 +1,21 @@
-import collections, heapq
+# Input: n = 7, headID = 6, manager = [1,2,3,4,5,6,-1], informTime = [0,6,5,4,3,2,1]
+# Output: 21
+# Actually we can just use a deque and a variable to track the longest time - that probably is faster
+import collections
 class Solution:    
     def numOfMinutes(self, n, headID, manager, informTime):
-        graph = collections.defaultdict(set)
-
-        for employeeID, manager in enumerate(manager):
-            graph[manager].add((informTime[manager], employeeID))
-
-        heap = [(informTime[headID], headID)]
-        dist = {}
-
-        while heap:
-            time, manager = heapq.heappop(heap)
-            if manager in dist:
-                continue
-            dist[manager] = time
-            for informTime, employee in graph[manager]:
-                heapq.heappush(heap, (informTime + time, employee))
-        return max(dist.values())
+        managerMap = collections.defaultdict(list)
+        for sub, managerID in enumerate(manager):
+            managerMap[managerID].append(sub)
+        
+        q = collections.deque([(headID, informTime[headID])])
+        ans = 0
+        while q:
+            manager_id, time = q.popleft()
+            ans = max(ans, time)
+            for sub in managerMap[manager_id]:
+                q.append((sub, informTime[sub] + time))
+        return ans
 
 
 s = Solution()

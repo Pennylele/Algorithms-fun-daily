@@ -1,25 +1,21 @@
 class Solution:
     def getMaximumGold(self, grid):
-        # dfs function
-        def dfs(row, col, gold):
-            if not (0 <= row < R and 0 <= col < C and (row, col) not in self.visited and grid[row][col] != 0):
-                return 0
-            self.visited.add((row, col))
-            gold = max(gold, grid[row][col] + max(dfs(row+1, col, gold), dfs(row-1, col, gold), dfs(row, col+1, gold), dfs(row, col-1, gold)))
-            self.visited.remove((row, col))
-            self.max_gold = max(self.max_gold, gold)
-            return gold
+        def dfs(r, c, gold):
+            if 0 <= r < R and 0 <= c < C and (r, c) not in self.visited and grid[r][c] != 0:
+                self.visited.add((r, c))
+                gold = grid[r][c] + max(dfs(r+1, c, gold), dfs(r-1, c, gold), dfs(r, c+1, gold), dfs(r, c-1, gold))
+                self.visited.remove((r,c))
+                return gold
+            return 0
 
-
-        # start the search from a non-0 cell
-        self.max_gold = 0
-        self.visited = set()
         R, C = len(grid), len(grid[0])
+        MAX = 0
+        self.visited = set()
         for i in range(R):
             for j in range(C):
-                if grid[i][j] > 0:
-                    dfs(i, j, 0)
-        return self.max_gold
+                if grid[i][j] != 0:
+                    MAX = max(MAX, dfs(i, j, 0))
+        return MAX
 
 obj = Solution()
 grid = [[0,6,0],[5,8,7],[0,9,0]]

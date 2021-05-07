@@ -1,0 +1,1 @@
+"Yes I'm using logitech k380 mainly to write code on my ipad"
